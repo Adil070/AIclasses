@@ -1,9 +1,9 @@
 "use client";
 
-import { getApps, initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getApps, initializeApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -14,8 +14,17 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-const app = getApps().length > 0 ? getApps()[0] : initializeApp(firebaseConfig);
+// The admin panel is a client-rendered tool — everything that touches these
+// exports runs inside useEffect/event handlers, never during render. Guarding
+// init to the browser avoids Next.js's SSR/prerender pass initializing the
+// Firebase SDK on the server, where no real config is available.
+const app: FirebaseApp | null =
+  typeof window !== "undefined"
+    ? getApps().length > 0
+      ? getApps()[0]
+      : initializeApp(firebaseConfig)
+    : null;
 
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const storage = getStorage(app);
+export const auth = (app ? getAuth(app) : null) as Auth;
+export const db = (app ? getFirestore(app) : null) as Firestore;
+export const storage = (app ? getStorage(app) : null) as FirebaseStorage;

@@ -8,12 +8,18 @@ html {
 
 @layer base {
   body {
-    @apply text-slate-800 bg-white;
+    @apply text-ink bg-white;
   }
 }
 
 @layer utilities {
-  .font-heading {
-    font-family: var(--font-poppins), sans-serif;
+  .section {
+    @apply max-w-7xl mx-auto px-6 lg:px-8;
+  }
+  .section-y {
+    @apply py-24 sm:py-28 lg:py-32;
+  }
+  .eyebrow {
+    @apply text-accent font-semibold text-sm tracking-wide;
   }
 }

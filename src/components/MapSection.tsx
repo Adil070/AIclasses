@@ -1,109 +1,103 @@
-import { MapPin, Phone, Clock } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
+import type { SiteSettings } from "@/lib/data/types";
+import { Reveal } from "@/components/motion/Reveal";
 
-export default function MapSection() {
+export default function MapSection({ settings }: { settings: SiteSettings }) {
   return (
-    <section id="location" className="py-20 bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">
-            Find Us
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-4 font-heading">
+    <section id="location" className="section-y bg-mist">
+      <div className="section">
+        <Reveal className="text-center mb-16">
+          <span className="eyebrow uppercase">Find Us</span>
+          <h2 className="text-4xl md:text-5xl font-semibold text-ink mt-3 mb-4 tracking-tight">
             Visit Our Institute
           </h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-            Conveniently located in Govandi, Mumbai — easy to reach by train and bus.
+          <p className="text-ink/50 text-lg max-w-2xl mx-auto">
+            Conveniently located — easy to reach by train and bus.
           </p>
-        </div>
+        </Reveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Info column */}
-          <div className="space-y-4">
-            {/* Address */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+          <Reveal className="space-y-4">
+            <div className="bg-white rounded-2xl p-6 border border-ink/[0.05]">
               <div className="flex items-start gap-4">
-                <div className="bg-blue-50 text-blue-600 p-3 rounded-xl flex-shrink-0">
-                  <MapPin size={20} />
+                <div className="bg-accent/10 text-accent p-3 rounded-xl flex-shrink-0">
+                  <MapPin size={19} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-1">Address</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed">
-                    AI Computer Institute,
-                    <br />
-                    Govandi, Mumbai,
-                    <br />
-                    Maharashtra — 400088
+                  <h4 className="font-semibold text-ink mb-1 tracking-tight">Address</h4>
+                  <p className="text-ink/50 text-sm leading-relaxed">
+                    {settings.addressLines.map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        {i < settings.addressLines.length - 1 && <br />}
+                      </span>
+                    ))}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Timings */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <div className="bg-white rounded-2xl p-6 border border-ink/[0.05]">
               <div className="flex items-start gap-4">
-                <div className="bg-green-50 text-green-600 p-3 rounded-xl flex-shrink-0">
-                  <Clock size={20} />
+                <div className="bg-accent/10 text-accent p-3 rounded-xl flex-shrink-0">
+                  <Clock size={19} />
                 </div>
                 <div className="w-full">
-                  <h4 className="font-bold text-slate-900 mb-2">Timings</h4>
+                  <h4 className="font-semibold text-ink mb-2 tracking-tight">Timings</h4>
                   <div className="space-y-1.5 text-sm">
-                    <div className="flex justify-between text-slate-500">
+                    <div className="flex justify-between text-ink/50">
                       <span>Mon – Sat</span>
-                      <span className="font-semibold text-slate-700">8:00 AM – 8:00 PM</span>
+                      <span className="font-medium text-ink/80">{settings.timingsWeekday}</span>
                     </div>
-                    <div className="flex justify-between text-slate-500">
+                    <div className="flex justify-between text-ink/50">
                       <span>Sunday</span>
-                      <span className="font-semibold text-slate-700">9:00 AM – 2:00 PM</span>
+                      <span className="font-medium text-ink/80">{settings.timingsSunday}</span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Phone */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+            <div className="bg-white rounded-2xl p-6 border border-ink/[0.05]">
               <div className="flex items-start gap-4">
-                <div className="bg-orange-50 text-orange-500 p-3 rounded-xl flex-shrink-0">
-                  <Phone size={20} />
+                <div className="bg-accent/10 text-accent p-3 rounded-xl flex-shrink-0">
+                  <Phone size={19} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-1">Call Us</h4>
+                  <h4 className="font-semibold text-ink mb-1 tracking-tight">Call Us</h4>
                   <a
-                    href="tel:+919876543210"
-                    className="text-blue-600 hover:underline text-sm font-semibold"
+                    href={`tel:${settings.phone.replace(/\s+/g, "")}`}
+                    className="text-accent hover:underline text-sm font-medium"
                   >
-                    +91 98765 43210
+                    {settings.phone}
                   </a>
-                  <p className="text-slate-400 text-xs mt-0.5">Available during institute hours</p>
+                  <p className="text-ink/40 text-xs mt-0.5">Available during institute hours</p>
                 </div>
               </div>
             </div>
 
-            {/* CTA */}
             <a
-              href="https://maps.app.goo.gl/H1TfHx7BSdhrHTYY8"
+              href={settings.mapLinkUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3.5 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg"
+              className="flex items-center justify-center gap-2 w-full bg-ink hover:bg-black text-white font-medium py-3.5 rounded-full transition-all duration-200"
             >
-              <MapPin size={17} /> Get Directions on Google Maps
+              <MapPin size={16} /> Get Directions on Google Maps
             </a>
-          </div>
+          </Reveal>
 
-          {/* Map */}
-          <div className="lg:col-span-2 rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+          <Reveal delay={0.1} className="lg:col-span-2 rounded-2xl overflow-hidden border border-ink/[0.06]">
             <iframe
-              src="https://maps.google.com/maps?q=AI+Computer+Institute+Govandi+Mumbai&z=16&output=embed"
+              src={settings.mapEmbedUrl}
               width="100%"
               height="480"
               style={{ border: 0, display: "block" }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="AI Computer Institute — Govandi, Mumbai"
+              title={`${settings.instituteName} — Location`}
             />
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

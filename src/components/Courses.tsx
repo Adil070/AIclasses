@@ -1,135 +1,68 @@
-const courses = [
-  {
-    emoji: "💻",
-    title: "MS Office Suite",
-    description: "Master Word, Excel, PowerPoint & Outlook for professional productivity and office work.",
-    duration: "2 Months",
-    level: "Beginner",
-    bg: "bg-blue-50",
-    border: "border-blue-100 hover:border-blue-300",
-    badge: "Most Popular",
-    badgeBg: "bg-blue-600",
-  },
-  {
-    emoji: "📊",
-    title: "Tally Prime & GST",
-    description: "Complete accounting software with GST filing, payroll, inventory and financial reports.",
-    duration: "3 Months",
-    level: "Beginner",
-    bg: "bg-green-50",
-    border: "border-green-100 hover:border-green-300",
-    badge: "High Demand",
-    badgeBg: "bg-green-600",
-  },
-  {
-    emoji: "🎨",
-    title: "Graphic Design",
-    description: "Photoshop, CorelDraw & Canva for logos, banners, posters and professional branding.",
-    duration: "3 Months",
-    level: "Beginner",
-    bg: "bg-purple-50",
-    border: "border-purple-100 hover:border-purple-300",
-    badge: "",
-    badgeBg: "",
-  },
-  {
-    emoji: "🌐",
-    title: "Web Design",
-    description: "HTML, CSS & responsive design fundamentals. Build stunning websites from scratch.",
-    duration: "4 Months",
-    level: "Intermediate",
-    bg: "bg-orange-50",
-    border: "border-orange-100 hover:border-orange-300",
-    badge: "Trending",
-    badgeBg: "bg-orange-500",
-  },
-  {
-    emoji: "🐍",
-    title: "Python Programming",
-    description: "Python fundamentals, scripting, automation and an intro to data science concepts.",
-    duration: "4 Months",
-    level: "Beginner",
-    bg: "bg-yellow-50",
-    border: "border-yellow-100 hover:border-yellow-300",
-    badge: "Trending",
-    badgeBg: "bg-yellow-600",
-  },
-  {
-    emoji: "🖥️",
-    title: "Computer Basics",
-    description: "From keyboard to internet — complete foundation for absolute beginners of all ages.",
-    duration: "1 Month",
-    level: "Beginner",
-    bg: "bg-slate-50",
-    border: "border-slate-200 hover:border-slate-400",
-    badge: "",
-    badgeBg: "",
-  },
-  {
-    emoji: "🖨️",
-    title: "DTP & Data Entry",
-    description: "Desktop publishing, fast typing skills and data entry for office and government jobs.",
-    duration: "2 Months",
-    level: "Beginner",
-    bg: "bg-red-50",
-    border: "border-red-100 hover:border-red-300",
-    badge: "",
-    badgeBg: "",
-  },
-  {
-    emoji: "🔧",
-    title: "Hardware & Networking",
-    description: "PC assembly, troubleshooting, LAN setup and basic network administration skills.",
-    duration: "3 Months",
-    level: "Intermediate",
-    bg: "bg-indigo-50",
-    border: "border-indigo-100 hover:border-indigo-300",
-    badge: "",
-    badgeBg: "",
-  },
-];
+import Image from "next/image";
+import { Clock, GraduationCap, Signal } from "lucide-react";
+import type { Course } from "@/lib/data/types";
+import { Reveal } from "@/components/motion/Reveal";
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: Course[] }) {
   return (
-    <section id="courses" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">
-            Our Specialities
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mt-2 mb-4 font-heading">
+    <section id="courses" className="section-y bg-white">
+      <div className="section">
+        <Reveal className="text-center mb-16">
+          <span className="eyebrow uppercase">Our Specialities</span>
+          <h2 className="text-4xl md:text-5xl font-semibold text-ink mt-3 mb-4 tracking-tight">
             Courses That Build Careers
           </h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-            Practical, industry‑focused courses designed to get you job‑ready from day one.
+          <p className="text-ink/50 text-lg max-w-2xl mx-auto">
+            Practical, industry-focused courses designed to get you job-ready from day one.
           </p>
-        </div>
+        </Reveal>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {courses.map((c) => (
-            <div
-              key={c.title}
-              className={`relative rounded-2xl p-6 border-2 ${c.bg} ${c.border} transition-all duration-300 hover:-translate-y-1 hover:shadow-lg`}
-            >
-              {c.badge && (
-                <span
-                  className={`absolute top-4 right-4 ${c.badgeBg} text-white text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full`}
-                >
-                  {c.badge}
-                </span>
-              )}
-              <div className="text-4xl mb-4">{c.emoji}</div>
-              <h3 className="font-bold text-slate-900 text-base mb-2 font-heading">{c.title}</h3>
-              <p className="text-slate-500 text-sm mb-4 leading-relaxed">{c.description}</p>
-              <div className="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-200/60">
-                <span>⏱ {c.duration}</span>
-                <span>📶 {c.level}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+        {courses.length === 0 ? (
+          <p className="text-center text-ink/40">Courses coming soon.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {courses.map((c, i) => (
+              <Reveal key={c.id} delay={(i % 4) * 0.06}>
+                <div className="relative rounded-3xl border border-ink/[0.06] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] h-full flex flex-col">
+                  <div className="relative h-36 bg-mist flex items-center justify-center">
+                    {c.imageUrl ? (
+                      <Image
+                        src={c.imageUrl}
+                        alt={c.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                      />
+                    ) : (
+                      <GraduationCap size={32} className="text-ink/20" />
+                    )}
+                    {c.badge && (
+                      <span className="absolute top-3 right-3 bg-ink text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
+                        {c.badge}
+                      </span>
+                    )}
+                  </div>
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="font-semibold text-ink text-base mb-2 tracking-tight">
+                      {c.title}
+                    </h3>
+                    <p className="text-ink/50 text-sm mb-4 leading-relaxed flex-1">
+                      {c.description}
+                    </p>
+                    <div className="flex items-center justify-between text-xs text-ink/40 pt-3 border-t border-ink/[0.06]">
+                      <span className="flex items-center gap-1.5">
+                        <Clock size={12} /> {c.duration}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Signal size={12} /> {c.level}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
