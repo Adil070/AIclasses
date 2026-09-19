@@ -1,32 +1,13 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
-import { getAdminAuth } from "@/lib/firebase/admin";
+import { verifyAdminAuth } from "@/lib/firebase/admin";
 
 const VALID_TAGS = ["settings", "banners", "courses", "features", "testimonials"] as const;
 type ValidTag = (typeof VALID_TAGS)[number];
 
 export async function POST(request: Request) {
-  const authHeader = request.headers.get("authorization") ?? "";
-  const idToken = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
-
-  if (!idToken) {
-    return NextResponse.json({ error: "Missing auth token." }, { status: 401 });
-  }
-
-  const adminEmail = process.env.ADMIN_EMAIL;
-  if (!adminEmail) {
-    console.error("ADMIN_EMAIL is not configured.");
-    return NextResponse.json({ error: "Server misconfigured." }, { status: 500 });
-  }
-
-  try {
-    const decoded = await getAdminAuth().verifyIdToken(idToken);
-    if (decoded.email !== adminEmail) {
-      return NextResponse.json({ error: "Forbidden." }, { status: 403 });
-    }
-  } catch {
-    return NextResponse.json({ error: "Invalid or expired token." }, { status: 401 });
-  }
+  const auth = await verifyAdminAuth(request);
+  if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
   let tag: string | undefined;
   try {

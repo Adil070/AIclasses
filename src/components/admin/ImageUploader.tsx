@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ImagePlus, Loader2, X } from "lucide-react";
-import { storage } from "@/lib/firebase/client";
+import { auth } from "@/lib/firebase/client";
 
 export function ImageUploader({
   value,
@@ -20,27 +19,27 @@ export function ImageUploader({
     setError(null);
     setUploading(true);
     try {
-      const path = `course-images/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.\-_]/g, "-")}`;
-      const storageRef = ref(storage, path);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      onChange(url);
-    } catch {
-      setError("Upload failed. Check your connection and Storage rules.");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("Not signed in.");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${idToken}` },
+        body: formData,
+      });
+
+      const body = await res.json();
+      if (!res.ok) throw new Error(body.error || "Upload failed.");
+
+      onChange(body.url);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Upload failed.");
     } finally {
       setUploading(false);
     }
-  }
-
-  async function handleRemove() {
-    if (value) {
-      try {
-        await deleteObject(ref(storage, value));
-      } catch {
-        // File may already be gone or URL wasn't a Storage ref — safe to ignore.
-      }
-    }
-    onChange("");
   }
 
   return (
@@ -62,7 +61,7 @@ export function ImageUploader({
           <img src={value} alt="" className="w-full h-full object-cover" />
           <button
             type="button"
-            onClick={handleRemove}
+            onClick={() => onChange("")}
             className="absolute top-1.5 right-1.5 bg-black/60 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
             aria-label="Remove image"
           >

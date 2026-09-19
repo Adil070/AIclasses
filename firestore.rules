@@ -2,9 +2,9 @@ rules_version = '2';
 
 // IMPORTANT: replace the placeholder below with the exact email of the one
 // Firebase Auth user you create for the admin panel (see SETUP.md), and keep
-// it in sync with the ADMIN_EMAIL server env var used by /api/revalidate.
+// it in sync with the ADMIN_EMAIL server env var (used by /api/revalidate and /api/upload).
 function isAdmin() {
-  return request.auth != null && request.auth.token.email == "REPLACE_WITH_ADMIN_EMAIL@example.com";
+  return request.auth != null && request.auth.token.email == "mohsadil070@gmail.com";
 }
 
 service cloud.firestore {
