@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// Keep this in sync with firestore.rules and the ADMIN_EMAIL env var.
+function isAdmin() {
+  return request.auth != null && request.auth.token.email == "REPLACE_WITH_ADMIN_EMAIL@example.com";
+}
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Course/banner images: publicly viewable, only the admin can upload/delete.
+    match /course-images/{fileName} {
+      allow read: if true;
+      allow write: if isAdmin() && request.resource.size < 5 * 1024 * 1024
+                    && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

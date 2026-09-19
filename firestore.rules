@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// IMPORTANT: replace the placeholder below with the exact email of the one
+// Firebase Auth user you create for the admin panel (see SETUP.md), and keep
+// it in sync with the ADMIN_EMAIL server env var used by /api/revalidate.
+function isAdmin() {
+  return request.auth != null && request.auth.token.email == "REPLACE_WITH_ADMIN_EMAIL@example.com";
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Public content: anyone can read, only the admin can write.
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /banners/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /courses/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /features/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+    match /testimonials/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Contact form submissions: only ever touched server-side via the Admin
+    // SDK (which bypasses these rules), except the admin panel's inbox view
+    // which reads/deletes them directly with the client SDK.
+    match /contactSubmissions/{docId} {
+      allow read, delete: if isAdmin();
+      allow create: if false;
+      allow update: if false;
+    }
+  }
+}
