@@ -99,6 +99,8 @@ export default function CoursesAdminPage() {
           </Field>
           <Field label="Photo">
             <ImageUploader
+              kind="course"
+              title={draft.title}
               value={draft.imageUrl}
               onChange={(url) => setDraft({ ...draft, imageUrl: url })}
             />
@@ -106,7 +108,7 @@ export default function CoursesAdminPage() {
           <Field label="What you'll learn (one point per line)">
             <Textarea
               rows={4}
-              value={draft.highlights.join("\n")}
+              value={(draft.highlights ?? []).join("\n")}
               onChange={(e) => setDraft({ ...draft, highlights: e.target.value.split("\n") })}
               placeholder={"Build real spreadsheets from day one\nHands-on projects every week\nCertificate on completion"}
             />
@@ -130,13 +132,15 @@ export default function CoursesAdminPage() {
       )}
       renderRow={(item) => (
         <div className="flex items-center gap-4">
-          {item.imageUrl && (
+          {item.imageUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={item.imageUrl}
               alt=""
               className="w-14 h-14 rounded-lg object-cover shrink-0"
             />
+          ) : (
+            <div className="w-14 h-14 rounded-lg bg-neutral-100 shrink-0" />
           )}
           <div className="min-w-0">
             <p className="font-medium text-neutral-900">

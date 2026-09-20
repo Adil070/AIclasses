@@ -8,6 +8,11 @@ import Banner from "@/components/Banner";
 import MapSection from "@/components/MapSection";
 import QuerySection from "@/components/QuerySection";
 import Footer from "@/components/Footer";
+import { CourseCarousel } from "@/components/interactive/CourseCarousel";
+import { RadialSelector } from "@/components/interactive/RadialSelector";
+import { ScrollProgression } from "@/components/interactive/ScrollProgression";
+import { ProjectsGallery } from "@/components/interactive/ProjectsGallery";
+import { PROGRESSION_STEPS, STUDENT_PROJECTS } from "@/lib/data/interactive-content";
 import { getSiteSettings } from "@/lib/data/settings";
 import { getBanners } from "@/lib/data/banners";
 import { getCourses } from "@/lib/data/courses";
@@ -33,6 +38,14 @@ export default async function Home() {
       <Hero settings={settings} courses={courses} />
       <Stats settings={settings} />
       <Courses courses={courses} />
+      <div className="py-10 bg-white">
+        <CourseCarousel courses={courses} />
+      </div>
+      <div className="py-10 bg-white">
+        <RadialSelector courses={courses} />
+      </div>
+      <ScrollProgression steps={PROGRESSION_STEPS} />
+      <ProjectsGallery projects={STUDENT_PROJECTS} />
       <WhyUs settings={settings} features={features} />
       <Testimonials testimonials={testimonials} />
       <Banner banners={banners} />

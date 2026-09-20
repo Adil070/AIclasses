@@ -1,19 +1,44 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { ImagePlus, Loader2, X } from "lucide-react";
+import { Check, Copy, ImagePlus, Loader2, Sparkles, X } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
+import {
+  buildImagePrompt,
+  imageHelperText,
+  type ImageKind,
+} from "@/lib/admin/imageSpecs";
 
 export function ImageUploader({
   value,
   onChange,
+  kind,
+  title = "",
 }: {
   value: string;
   onChange: (url: string) => void;
+  /** When set, shows format/size guidance and an AI-prompt generator. */
+  kind?: ImageKind;
+  /** Item title used to tailor the generated prompt. */
+  title?: string;
 }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showPrompt, setShowPrompt] = useState(false);
+  const [copied, setCopied] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const prompt = kind ? buildImagePrompt(kind, title) : "";
+
+  async function copyPrompt() {
+    try {
+      await navigator.clipboard.writeText(prompt);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  }
 
   async function handleFile(file: File) {
     setError(null);
@@ -80,6 +105,41 @@ export function ImageUploader({
         </button>
       )}
       {error && <p className="text-xs text-red-600 mt-1.5">{error}</p>}
+
+      {kind && (
+        <div className="mt-3 max-w-md">
+          <p className="text-[11px] leading-relaxed text-neutral-500">{imageHelperText(kind)}</p>
+
+          <button
+            type="button"
+            onClick={() => setShowPrompt((v) => !v)}
+            className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-neutral-600 hover:text-neutral-900"
+          >
+            <Sparkles size={13} />
+            {showPrompt ? "Hide image prompt" : "Generate image prompt"}
+          </button>
+
+          {showPrompt && (
+            <div className="mt-2 rounded-lg border border-neutral-200 bg-neutral-50 p-3">
+              <p className="text-[13px] leading-relaxed text-neutral-700 whitespace-pre-wrap">
+                {prompt}
+              </p>
+              <button
+                type="button"
+                onClick={copyPrompt}
+                className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-medium text-white bg-neutral-900 hover:bg-black rounded-md px-3 py-1.5"
+              >
+                {copied ? <Check size={13} /> : <Copy size={13} />}
+                {copied ? "Copied" : "Copy prompt"}
+              </button>
+              <p className="mt-2 text-[11px] text-neutral-400">
+                Paste into any AI image tool (e.g. ChatGPT, Midjourney, Gemini), then upload the
+                result above.
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

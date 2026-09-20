@@ -46,6 +46,8 @@ export default function BannersAdminPage() {
           </Field>
           <Field label="Image (optional)">
             <ImageUploader
+              kind="banner"
+              title={draft.title}
               value={draft.imageUrl}
               onChange={(url) => setDraft({ ...draft, imageUrl: url })}
             />

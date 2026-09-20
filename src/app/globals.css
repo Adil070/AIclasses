@@ -8,6 +8,11 @@ html {
 
 @layer base {
   body {
+    /* Prevent stray transforms/wide children from creating a horizontal
+       scrollbar and letting the page wobble sideways on mobile. Keep this on
+       body only so `position: sticky` and scroll tracking keep working. */
+    overflow-x: hidden;
+    max-width: 100vw;
     @apply text-ink bg-white;
   }
 }

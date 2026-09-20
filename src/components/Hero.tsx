@@ -1,6 +1,7 @@
 import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
 import type { Course, SiteSettings } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
+import { Counter } from "@/components/interactive/Counter";
 
 export default function Hero({
   settings,
@@ -72,9 +73,10 @@ export default function Hero({
                   { number: settings.stats.yearsExperience, label: "Years Experience" },
                 ].map((s) => (
                   <div key={s.label}>
-                    <div className="text-2xl font-semibold text-ink tracking-tight">
-                      {s.number}
-                    </div>
+                    <Counter
+                      value={s.number}
+                      className="text-2xl font-semibold text-ink tracking-tight block"
+                    />
                     <div className="text-ink/45 text-sm">{s.label}</div>
                   </div>
                 ))}

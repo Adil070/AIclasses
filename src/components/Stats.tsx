@@ -1,6 +1,7 @@
 import { Award, BookOpen, TrendingUp, Users } from "lucide-react";
 import type { SiteSettings } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
+import { Counter } from "@/components/interactive/Counter";
 
 export default function Stats({ settings }: { settings: SiteSettings }) {
   const stats = [
@@ -22,9 +23,10 @@ export default function Stats({ settings }: { settings: SiteSettings }) {
                   <div className="inline-flex p-3 rounded-xl mb-3 bg-accent/10 text-accent">
                     <Icon size={22} />
                   </div>
-                  <div className="text-3xl font-semibold text-ink mb-1 tracking-tight">
-                    {s.value}
-                  </div>
+                  <Counter
+                    value={s.value}
+                    className="text-3xl font-semibold text-ink mb-1 tracking-tight block"
+                  />
                   <div className="text-sm text-ink/50">{s.label}</div>
                 </div>
               </Reveal>
