@@ -25,6 +25,7 @@ export interface Banner {
   title: string;
   message: string;
   badgeText: string;
+  imageUrl: string;
   active: boolean;
   order: number;
 }
@@ -37,6 +38,11 @@ export interface Course {
   level: string;
   imageUrl: string;
   badge: string;
+  highlights: string[];
+  fee: string;
+  mode: string;
+  eligibility: string;
+  certification: string;
   order: number;
   published: boolean;
 }

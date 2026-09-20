@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Loader2, Lock } from "lucide-react";
@@ -16,9 +16,11 @@ export default function AdminLoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  if (!checkingSession && user) {
-    router.replace("/admin");
-  }
+  useEffect(() => {
+    if (!checkingSession && user) {
+      router.replace("/admin");
+    }
+  }, [checkingSession, user, router]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

@@ -9,7 +9,7 @@ export default function CoursesAdminPage() {
   return (
     <CrudManager<Course>
       title="Courses"
-      description="Courses shown in the Courses section, with photo, duration, level and an optional badge."
+      description="Courses shown in the Courses section, with photo, duration, level, fee, highlights and an optional badge."
       collectionName="courses"
       revalidateTag="courses"
       emptyItem={() => ({
@@ -19,6 +19,11 @@ export default function CoursesAdminPage() {
         level: "Beginner",
         imageUrl: "",
         badge: "",
+        highlights: [],
+        fee: "",
+        mode: "",
+        eligibility: "",
+        certification: "",
         order: 0,
         published: true,
       })}
@@ -55,6 +60,36 @@ export default function CoursesAdminPage() {
               />
             </Field>
           </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Fee">
+              <Input
+                value={draft.fee}
+                onChange={(e) => setDraft({ ...draft, fee: e.target.value })}
+                placeholder="₹4,500 or Contact for pricing"
+              />
+            </Field>
+            <Field label="Mode">
+              <Input
+                value={draft.mode}
+                onChange={(e) => setDraft({ ...draft, mode: e.target.value })}
+                placeholder="Offline · Govandi Center"
+              />
+            </Field>
+          </div>
+          <Field label="Eligibility (optional)">
+            <Input
+              value={draft.eligibility}
+              onChange={(e) => setDraft({ ...draft, eligibility: e.target.value })}
+              placeholder="Open to all, no prior experience needed"
+            />
+          </Field>
+          <Field label="Certification (optional)">
+            <Input
+              value={draft.certification}
+              onChange={(e) => setDraft({ ...draft, certification: e.target.value })}
+              placeholder="Certificate of Completion provided"
+            />
+          </Field>
           <Field label="Badge (optional)">
             <Input
               value={draft.badge}
@@ -66,6 +101,14 @@ export default function CoursesAdminPage() {
             <ImageUploader
               value={draft.imageUrl}
               onChange={(url) => setDraft({ ...draft, imageUrl: url })}
+            />
+          </Field>
+          <Field label="What you'll learn (one point per line)">
+            <Textarea
+              rows={4}
+              value={draft.highlights.join("\n")}
+              onChange={(e) => setDraft({ ...draft, highlights: e.target.value.split("\n") })}
+              placeholder={"Build real spreadsheets from day one\nHands-on projects every week\nCertificate on completion"}
             />
           </Field>
           <div className="flex items-center gap-8">
@@ -104,6 +147,7 @@ export default function CoursesAdminPage() {
             </p>
             <p className="text-sm text-neutral-500 truncate">
               {item.duration} · {item.level}
+              {item.fee && ` · ${item.fee}`}
             </p>
           </div>
         </div>

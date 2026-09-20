@@ -3,6 +3,7 @@
 import type { Banner } from "@/lib/data/types";
 import { CrudManager } from "@/components/admin/CrudManager";
 import { Checkbox, Field, Input, Textarea } from "@/components/admin/ui";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 export default function BannersAdminPage() {
   return (
@@ -11,7 +12,14 @@ export default function BannersAdminPage() {
       description="Announcement banners shown near the top of the site (new branch openings, offers, etc.)."
       collectionName="banners"
       revalidateTag="banners"
-      emptyItem={() => ({ title: "", message: "", badgeText: "", active: true, order: 0 })}
+      emptyItem={() => ({
+        title: "",
+        message: "",
+        badgeText: "",
+        imageUrl: "",
+        active: true,
+        order: 0,
+      })}
       renderForm={(draft, setDraft) => (
         <>
           <Field label="Title">
@@ -36,6 +44,12 @@ export default function BannersAdminPage() {
               placeholder="Opening Soon"
             />
           </Field>
+          <Field label="Image (optional)">
+            <ImageUploader
+              value={draft.imageUrl}
+              onChange={(url) => setDraft({ ...draft, imageUrl: url })}
+            />
+          </Field>
           <div className="flex items-center gap-8">
             <Checkbox
               label="Active"
@@ -54,13 +68,23 @@ export default function BannersAdminPage() {
         </>
       )}
       renderRow={(item) => (
-        <>
-          <p className="font-medium text-neutral-900">
-            {item.title}
-            {!item.active && <span className="text-xs text-neutral-400 ml-2">(inactive)</span>}
-          </p>
-          <p className="text-sm text-neutral-500 truncate">{item.message}</p>
-        </>
+        <div className="flex items-center gap-4">
+          {item.imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={item.imageUrl}
+              alt=""
+              className="w-14 h-14 rounded-lg object-cover shrink-0"
+            />
+          )}
+          <div className="min-w-0">
+            <p className="font-medium text-neutral-900">
+              {item.title}
+              {!item.active && <span className="text-xs text-neutral-400 ml-2">(inactive)</span>}
+            </p>
+            <p className="text-sm text-neutral-500 truncate">{item.message}</p>
+          </div>
+        </div>
       )}
       confirmDeleteLabel={(item) => `Delete banner "${item.title}"?`}
     />

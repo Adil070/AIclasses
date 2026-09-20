@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Bell, Sparkles } from "lucide-react";
 import type { Banner as BannerType } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
@@ -9,6 +10,18 @@ export default function Banner({ banners }: { banners: BannerType[] }) {
     <div className="space-y-px">
       {banners.map((banner) => (
         <section key={banner.id} className="relative py-10 overflow-hidden bg-ink">
+          {banner.imageUrl && (
+            <>
+              <Image
+                src={banner.imageUrl}
+                alt=""
+                fill
+                className="object-cover"
+                sizes="100vw"
+              />
+              <div className="absolute inset-0 bg-ink/75" />
+            </>
+          )}
           <div className="relative section">
             <Reveal>
               <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-white text-center md:text-left">
