@@ -66,7 +66,7 @@ export default function BannerCarousel({ banners }: { banners: BannerType[] }) {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="relative h-64 sm:h-56 md:h-48">
+      <div className="relative h-72 sm:h-72 md:h-80 lg:h-96">
         <AnimatePresence initial={false} custom={direction} mode="popLayout">
           <motion.div
             key={banner.id}
