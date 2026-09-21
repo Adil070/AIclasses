@@ -2,9 +2,11 @@
 
 import { useRef, useState } from "react";
 import { RotateCcw, RotateCw } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { Course } from "@/lib/data/types";
 import { CourseCard } from "@/components/CourseCard";
+import BlobField from "@/components/interactive/BlobField";
+import { iconForCourse } from "@/lib/interactive/courseIcon";
 import {
   angleBetween,
   angleForIndex,
@@ -98,88 +100,171 @@ export function RadialSelector({ courses }: { courses: Course[] }) {
 
   // Rotate the whole ring so the focused item sits at the top (-90deg).
   const ringRotation = -angleForIndex(focus, count) - 90;
-  const radius = 110;
+  const radius = 148;
   const active = courses[focus];
+  const ActiveIcon = iconForCourse(active.title);
+  const moduleCode = `MODULE #${String(focus + 1).padStart(2, "0")}`;
 
   return (
-    <div className="section flex flex-col items-center overflow-hidden">
-      <h3 className="text-lg font-semibold text-ink tracking-tight mb-2">Explore by course</h3>
-      <p className="text-ink/45 text-sm mb-8">Spin the dial or tap a course</p>
+    <div className="relative section flex flex-col items-center overflow-hidden">
+      <BlobField />
 
-      <div
-        ref={dialRef}
-        role="group"
-        aria-label="Radial course selector"
-        tabIndex={0}
-        onKeyDown={onKeyDown}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={endDrag}
-        onPointerCancel={endDrag}
-        className="relative w-[300px] max-w-full h-[300px] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-full touch-none cursor-grab active:cursor-grabbing"
-      >
-        <motion.div
-          className="absolute inset-0"
-          animate={{ rotate: ringRotation }}
-          transition={
-            prefersReduced ? { duration: 0 } : { type: "spring", stiffness: 120, damping: 18 }
-          }
-        >
-          {courses.map((course, index) => {
-            const angle = (angleForIndex(index, count) * Math.PI) / 180;
-            const x = Math.cos(angle) * radius;
-            const y = Math.sin(angle) * radius;
-            const isActive = index === focus;
-            return (
-              <button
-                type="button"
-                key={course.id}
-                onClick={() => selectIfTap(index)}
-                aria-label={`Show ${course.title}`}
-                aria-current={isActive}
-                className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full text-[11px] font-medium flex items-center justify-center text-center px-1 leading-tight transition-colors ${
-                  isActive ? "bg-accent text-white" : "bg-mist text-ink/60 hover:bg-ink/[0.06]"
-                }`}
-                style={{
-                  transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(${-ringRotation}deg)`,
-                }}
+      <div className="relative z-10 flex flex-col items-center w-full">
+        <span className="eyebrow uppercase mb-2">Explore</span>
+        <h3 className="text-2xl font-semibold text-ink tracking-tight mb-1">
+          Find your course
+        </h3>
+        <p className="text-ink/45 text-sm mb-8">Spin the dial or tap a course</p>
+
+        <div className="relative w-[340px] max-w-full h-[340px] sm:w-[420px] sm:h-[420px] flex items-center justify-center">
+          {/* Fixed top stopper pin (12 o'clock) */}
+          <div className="absolute -top-2 z-30 flex flex-col items-center pointer-events-none">
+            <div className="glass w-4 h-6 rounded-t-md border border-ink/15 shadow-lg flex items-center justify-center">
+              <div className="w-1 h-3 rounded-full bg-ink/25" />
+            </div>
+            <div className="w-0.5 h-2 bg-ink/20" />
+          </div>
+
+          {/* Concentric ambient rings */}
+          <div className="absolute inset-0 rounded-full border border-dashed border-accent/15" />
+          <div className="absolute inset-4 rounded-full border border-ink/[0.06]" />
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-52 h-52 rounded-full bg-accent/10 blur-3xl" />
+          </div>
+
+          {/* Rotary wheel */}
+          <div
+            ref={dialRef}
+            role="group"
+            aria-label="Radial course selector"
+            tabIndex={0}
+            onKeyDown={onKeyDown}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={endDrag}
+            onPointerCancel={endDrag}
+            className="absolute inset-0 rounded-full touch-none cursor-grab active:cursor-grabbing focus:outline-none"
+          >
+            <motion.div
+              className="absolute inset-0"
+              animate={{ rotate: ringRotation }}
+              transition={
+                prefersReduced ? { duration: 0 } : { type: "spring", stiffness: 120, damping: 18 }
+              }
+            >
+              {courses.map((course, index) => {
+                const itemAngle = angleForIndex(index, count);
+                const angle = (itemAngle * Math.PI) / 180;
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+                const isActive = index === focus;
+                const Icon = iconForCourse(course.title);
+                return (
+                  // Outer div handles positioning (translate); inner motion.button
+                  // only animates scale/opacity so framer doesn't clobber the
+                  // translate transform.
+                  <div
+                    key={course.id}
+                    className="absolute top-1/2 left-1/2 w-16 h-16"
+                    style={{
+                      transform: `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`,
+                    }}
+                  >
+                    <motion.button
+                      type="button"
+                      onClick={() => selectIfTap(index)}
+                      aria-label={`Show ${course.title}`}
+                      aria-current={isActive}
+                      animate={{ scale: isActive ? 1.12 : 0.94, opacity: isActive ? 1 : 0.72 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                      className={`dial-hole w-16 h-16 rounded-full flex items-center justify-center ${
+                        isActive ? "dial-hole--active text-white" : "text-ink/70"
+                      }`}
+                    >
+                      {/* Content tilts tangentially with the wheel, like the reference */}
+                      <span
+                        className="flex flex-col items-center justify-center"
+                        style={{ transform: `rotate(${itemAngle}deg)` }}
+                      >
+                        <Icon size={16} className="mb-0.5" />
+                        <span className="text-[10px] font-semibold leading-none">
+                          {course.title.split(" ")[0]}
+                        </span>
+                      </span>
+                    </motion.button>
+                  </div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          {/* Center display card */}
+          <div className="absolute w-[190px] h-[190px] sm:w-[220px] sm:h-[220px] rounded-full glass bg-surface/90 border border-ink/[0.08] shadow-2xl z-20 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={active.id}
+                initial={{ opacity: 0, scale: 0.94 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.94 }}
+                transition={{ duration: 0.2 }}
+                className="flex flex-col items-center"
               >
-                {course.title.split(" ")[0]}
-              </button>
-            );
-          })}
-        </motion.div>
-
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="text-center px-6">
-            <p className="text-sm font-semibold text-ink tracking-tight">{active.title}</p>
-            <p className="text-xs text-ink/50 mt-1">{active.duration}</p>
+                <span className="text-[10px] uppercase font-mono tracking-[0.2em] text-accent/80 mb-1">
+                  Selected Course
+                </span>
+                <h4 className="text-lg sm:text-xl font-bold text-ink leading-tight mb-1">
+                  {active.title}
+                </h4>
+                <p className="text-xs text-ink/50 mb-2.5">{active.duration}</p>
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-mist border border-ink/10 text-[10px] font-mono text-ink/70">
+                  <ActiveIcon size={12} className="text-accent" />
+                  {moduleCode}
+                </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
-      </div>
 
-      <div className="flex gap-3 mt-8">
-        <button
-          type="button"
-          onClick={() => step(-1)}
-          aria-label="Rotate to previous course"
-          className="p-2.5 rounded-full border border-ink/10 hover:bg-ink/[0.04]"
-        >
-          <RotateCcw size={18} />
-        </button>
-        <button
-          type="button"
-          onClick={() => step(1)}
-          aria-label="Rotate to next course"
-          className="p-2.5 rounded-full border border-ink/10 hover:bg-ink/[0.04]"
-        >
-          <RotateCw size={18} />
-        </button>
-      </div>
+        <div className="flex items-center gap-4 mt-8">
+          <motion.button
+            type="button"
+            onClick={() => step(-1)}
+            aria-label="Rotate to previous course"
+            whileHover={prefersReduced ? undefined : { scale: 1.1, rotate: -15 }}
+            whileTap={{ scale: 0.9 }}
+            className="glass p-3 rounded-full border border-ink/10 text-ink/70 hover:text-accent"
+          >
+            <RotateCcw size={18} />
+          </motion.button>
+          <span className="glass px-3 py-1.5 rounded-full border border-ink/10 text-xs font-mono text-ink/50 tabular-nums">
+            <span className="text-accent font-bold">{focus + 1}</span> / {count}
+          </span>
+          <motion.button
+            type="button"
+            onClick={() => step(1)}
+            aria-label="Rotate to next course"
+            whileHover={prefersReduced ? undefined : { scale: 1.1, rotate: 15 }}
+            whileTap={{ scale: 0.9 }}
+            className="glass p-3 rounded-full border border-ink/10 text-ink/70 hover:text-accent"
+          >
+            <RotateCw size={18} />
+          </motion.button>
+        </div>
 
-      {/* Full course card for the focused course, same as the grid cards above */}
-      <div className="w-full max-w-sm mt-10">
-        <CourseCard key={active.id} course={active} />
+        {/* Full course card for the focused course, same as the grid cards above */}
+        <div className="w-full max-w-sm mt-12">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <CourseCard course={active} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

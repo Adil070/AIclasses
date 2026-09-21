@@ -97,11 +97,26 @@ const studentProjects = [
   { title: "Inventory Tracker", student: "Imran S.", imageUrl: "", order: 3, published: true },
 ];
 
+const branches = [
+  {
+    name: "Govandi (Main)",
+    addressLines: ["AI Computer Institute", "Govandi West, Mumbai", "Maharashtra — 400043"],
+    phone: "+91 98765 43210",
+    timingsWeekday: "8:00 AM – 8:00 PM",
+    timingsSunday: "9:00 AM – 2:00 PM",
+    mapEmbedUrl:
+      "https://maps.google.com/maps?q=AI+Computer+Institute+Govandi+Mumbai&z=16&output=embed",
+    mapLinkUrl: "https://maps.app.goo.gl/H1TfHx7BSdhrHTYY8",
+    order: 0,
+    published: true,
+  },
+];
+
 async function seed() {
   await db.doc("settings/main").set(settings, { merge: true });
   console.log("✓ settings/main");
 
-  for (const [name, docs] of Object.entries({ banners, courses, features, testimonials, studentProjects })) {
+  for (const [name, docs] of Object.entries({ banners, courses, features, testimonials, studentProjects, branches })) {
     const existing = await db.collection(name).limit(1).get();
     if (!existing.empty) {
       console.log(`- ${name}: already has data, skipping (delete the collection first to reseed)`);

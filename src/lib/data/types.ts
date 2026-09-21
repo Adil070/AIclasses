@@ -81,6 +81,19 @@ export interface Testimonial {
   order: number;
 }
 
+export interface Branch {
+  id: string;
+  name: string;
+  addressLines: string[];
+  phone: string;
+  timingsWeekday: string;
+  timingsSunday: string;
+  mapEmbedUrl: string;
+  mapLinkUrl: string;
+  order: number;
+  published: boolean;
+}
+
 export interface StudentProject {
   id: string;
   title: string;

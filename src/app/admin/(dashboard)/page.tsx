@@ -5,6 +5,7 @@ import {
   FolderKanban,
   GraduationCap,
   Mail,
+  MapPin,
   Megaphone,
   MessageSquareQuote,
   Sparkles,
@@ -28,6 +29,7 @@ const TILES = [
     collection: "studentProjects",
     icon: FolderKanban,
   },
+  { href: "/admin/branches", label: "Branches", collection: "branches", icon: MapPin },
 ] as const;
 
 function CountTile({ href, label, collection, icon: Icon }: (typeof TILES)[number]) {

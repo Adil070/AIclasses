@@ -18,13 +18,14 @@ import { getCourses } from "@/lib/data/courses";
 import { getFeatures } from "@/lib/data/features";
 import { getTestimonials } from "@/lib/data/testimonials";
 import { getStudentProjects } from "@/lib/data/student-projects";
+import { getBranches } from "@/lib/data/branches";
 
 // Content is CMS-driven and edited from /admin; fetch per-request rather than
 // baking Firestore reads into the production build (which has no credentials).
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [settings, banners, courses, features, testimonials, studentProjects] =
+  const [settings, banners, courses, features, testimonials, studentProjects, branches] =
     await Promise.all([
       getSiteSettings(),
       getBanners(),
@@ -32,6 +33,7 @@ export default async function Home() {
       getFeatures(),
       getTestimonials(),
       getStudentProjects(),
+      getBranches(),
     ]);
 
   return (
@@ -48,8 +50,8 @@ export default async function Home() {
       <WhyUs settings={settings} features={features} />
       <Testimonials testimonials={testimonials} />
       <Banner banners={banners} />
-      <MapSection settings={settings} />
-      <QuerySection settings={settings} courses={courses} />
+      <MapSection settings={settings} branches={branches} />
+      <QuerySection settings={settings} courses={courses} branches={branches} />
       <Footer settings={settings} courses={courses} />
     </main>
   );

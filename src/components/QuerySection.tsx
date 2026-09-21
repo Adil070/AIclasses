@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
-import type { Course, SiteSettings } from "@/lib/data/types";
+import type { Branch, Course, SiteSettings } from "@/lib/data/types";
 import {
   BRANCH_OPTIONS,
   buildMailto,
@@ -20,11 +20,17 @@ const bad = "border-red-500 focus:border-red-500 focus:ring-red-500";
 export default function QuerySection({
   settings,
   courses = [],
+  branches = [],
 }: {
   settings?: SiteSettings;
   courses?: Course[];
+  branches?: Branch[];
 }) {
   const [errors, setErrors] = useState<EnquiryErrors>({});
+
+  // Prefer real CMS branch names; fall back to the generic options otherwise.
+  const branchOptions =
+    branches.length > 0 ? [...branches.map((b) => b.name), "No preference"] : [...BRANCH_OPTIONS];
 
   const to = settings?.email || "info@aicomputerinstitute.in";
   const phone = settings?.phone || "+91 90000 00001";
@@ -175,10 +181,10 @@ export default function QuerySection({
                   <div className="relative">
                     <select
                       name="branch"
-                      defaultValue={BRANCH_OPTIONS[0]}
+                      defaultValue={branchOptions[0]}
                       className={`${inputBase} ${ok} appearance-none pr-10`}
                     >
-                      {BRANCH_OPTIONS.map((b) => (
+                      {branchOptions.map((b) => (
                         <option key={b} value={b}>
                           {b}
                         </option>

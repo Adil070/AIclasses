@@ -1,8 +1,45 @@
-import { Clock, MapPin, Phone } from "lucide-react";
-import type { SiteSettings } from "@/lib/data/types";
+"use client";
+
+import { useState } from "react";
+import { ChevronDown, Clock, MapPin, Phone } from "lucide-react";
+import type { Branch, SiteSettings } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 
-export default function MapSection({ settings }: { settings: SiteSettings }) {
+/**
+ * "Visit Us" section. When multiple branches exist, a dropdown switches the
+ * address/phone/timings/map. With no CMS branches, it falls back to the single
+ * location stored in site settings so existing sites keep working.
+ */
+export default function MapSection({
+  settings,
+  branches = [],
+}: {
+  settings: SiteSettings;
+  branches?: Branch[];
+}) {
+  // Build the list of branches, falling back to settings as one implicit branch.
+  const list: Branch[] =
+    branches.length > 0
+      ? branches
+      : [
+          {
+            id: "default",
+            name: settings.addressLines[1] ?? "Main Branch",
+            addressLines: settings.addressLines,
+            phone: settings.phone,
+            timingsWeekday: settings.timingsWeekday,
+            timingsSunday: settings.timingsSunday,
+            mapEmbedUrl: settings.mapEmbedUrl,
+            mapLinkUrl: settings.mapLinkUrl,
+            order: 0,
+            published: true,
+          },
+        ];
+
+  const [active, setActive] = useState(0);
+  const branch = list[active] ?? list[0];
+  const hasMultiple = list.length > 1;
+
   return (
     <section id="location" className="section-y bg-mist">
       <div className="section">
@@ -16,6 +53,32 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
           </p>
         </Reveal>
 
+        {hasMultiple && (
+          <Reveal className="mb-8 flex justify-center">
+            <div className="relative w-full max-w-xs">
+              <label className="sr-only" htmlFor="branch-select">
+                Choose a branch
+              </label>
+              <select
+                id="branch-select"
+                value={active}
+                onChange={(e) => setActive(Number(e.target.value))}
+                className="glass w-full appearance-none rounded-full bg-surface px-5 py-3 pr-11 text-sm font-medium text-ink border border-ink/10 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
+              >
+                {list.map((b, i) => (
+                  <option key={b.id} value={i}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown
+                size={16}
+                className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-ink/40"
+              />
+            </div>
+          </Reveal>
+        )}
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <Reveal className="space-y-4">
             <div className="glass bg-surface rounded-2xl p-6 border border-ink/[0.05]">
@@ -26,10 +89,10 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
                 <div>
                   <h4 className="font-semibold text-ink mb-1 tracking-tight">Address</h4>
                   <p className="text-ink/50 text-sm leading-relaxed">
-                    {settings.addressLines.map((line, i) => (
+                    {branch.addressLines.map((line, i) => (
                       <span key={i}>
                         {line}
-                        {i < settings.addressLines.length - 1 && <br />}
+                        {i < branch.addressLines.length - 1 && <br />}
                       </span>
                     ))}
                   </p>
@@ -47,11 +110,11 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
                   <div className="space-y-1.5 text-sm">
                     <div className="flex justify-between text-ink/50">
                       <span>Mon – Sat</span>
-                      <span className="font-medium text-ink/80">{settings.timingsWeekday}</span>
+                      <span className="font-medium text-ink/80">{branch.timingsWeekday}</span>
                     </div>
                     <div className="flex justify-between text-ink/50">
                       <span>Sunday</span>
-                      <span className="font-medium text-ink/80">{settings.timingsSunday}</span>
+                      <span className="font-medium text-ink/80">{branch.timingsSunday}</span>
                     </div>
                   </div>
                 </div>
@@ -66,10 +129,10 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
                 <div>
                   <h4 className="font-semibold text-ink mb-1 tracking-tight">Call Us</h4>
                   <a
-                    href={`tel:${settings.phone.replace(/\s+/g, "")}`}
+                    href={`tel:${branch.phone.replace(/\s+/g, "")}`}
                     className="text-accent hover:underline text-sm font-medium"
                   >
-                    {settings.phone}
+                    {branch.phone}
                   </a>
                   <p className="text-ink/40 text-xs mt-0.5">Available during institute hours</p>
                 </div>
@@ -77,7 +140,7 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
             </div>
 
             <a
-              href={settings.mapLinkUrl}
+              href={branch.mapLinkUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full bg-accent hover:bg-accent-dark text-white font-medium py-3.5 rounded-full transition-all duration-200"
@@ -86,16 +149,20 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
             </a>
           </Reveal>
 
-          <Reveal delay={0.1} className="lg:col-span-2 rounded-2xl overflow-hidden border border-ink/[0.06]">
+          <Reveal
+            delay={0.1}
+            className="lg:col-span-2 rounded-2xl overflow-hidden border border-ink/[0.06]"
+          >
             <iframe
-              src={settings.mapEmbedUrl}
+              key={branch.id}
+              src={branch.mapEmbedUrl}
               width="100%"
               height="480"
               style={{ border: 0, display: "block" }}
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title={`${settings.instituteName} — Location`}
+              title={`${branch.name} — Location`}
             />
           </Reveal>
         </div>
