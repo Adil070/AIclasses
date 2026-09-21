@@ -6,6 +6,11 @@ export const DEFAULT_SETTINGS: SiteSettings = {
   heroHeadline: "Unlock Your Digital Future Today",
   heroSubheadline:
     "Professional computer education designed to give you real-world skills.",
+  heroBadges: [
+    "Admissions open · new batch this month",
+    "Certification programmes available",
+    "Free demo class · limited seats",
+  ],
   phone: "+91 98765 43210",
   email: "info@aicomputerinstitute.example",
   addressLines: ["AI Computer Institute", "Govandi, Mumbai", "Maharashtra — 400088"],

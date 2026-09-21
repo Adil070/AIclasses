@@ -12,6 +12,9 @@ export interface ProjectItem {
   imageUrl?: string;
 }
 
+// The CMS StudentProject shape is compatible with ProjectItem (extra id/order/
+// published fields are ignored here), so either can be passed in.
+
 /**
  * Swipeable student projects gallery. Navigate by swipe, buttons, or arrow
  * keys; the active index is always bounded. Renders an empty-but-valid
@@ -54,7 +57,7 @@ export function ProjectsGallery({ projects }: { projects: ProjectItem[] }) {
           aria-roledescription="carousel"
           tabIndex={0}
           onKeyDown={onKeyDown}
-          className="relative rounded-3xl overflow-hidden bg-white border border-ink/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="relative rounded-3xl overflow-hidden bg-mist border border-ink/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <AnimatePresence mode="wait">
             <motion.div
@@ -91,7 +94,7 @@ export function ProjectsGallery({ projects }: { projects: ProjectItem[] }) {
             type="button"
             onClick={() => go(-1)}
             aria-label="Previous project"
-            className="p-2.5 rounded-full border border-ink/10 bg-white hover:bg-ink/[0.04]"
+            className="p-2.5 rounded-full border border-ink/10 bg-surface hover:bg-ink/[0.04]"
           >
             <ChevronLeft size={18} />
           </button>
@@ -102,7 +105,7 @@ export function ProjectsGallery({ projects }: { projects: ProjectItem[] }) {
             type="button"
             onClick={() => go(1)}
             aria-label="Next project"
-            className="p-2.5 rounded-full border border-ink/10 bg-white hover:bg-ink/[0.04]"
+            className="p-2.5 rounded-full border border-ink/10 bg-surface hover:bg-ink/[0.04]"
           >
             <ChevronRight size={18} />
           </button>

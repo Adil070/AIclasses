@@ -4,7 +4,7 @@
  * prompt string that accounts for the item title and the section's ideal size.
  */
 
-export type ImageKind = "course" | "banner";
+export type ImageKind = "course" | "banner" | "studentProject";
 
 export interface ImageSpec {
   label: string;
@@ -40,6 +40,15 @@ export const IMAGE_SPECS: Record<ImageKind, ImageSpec> = {
     usage:
       "Full-width background behind a dark 75% overlay — use darker, low-detail images so text stays readable.",
   },
+  studentProject: {
+    label: "Project image",
+    width: 1280,
+    height: 800,
+    aspectLabel: "16:10 landscape",
+    maxFileSize: "under ~300 KB",
+    formats: "JPG or WebP (PNG for screenshots)",
+    usage: "Shown in the Student Projects gallery — cropped to fill (object-cover).",
+  },
 };
 
 /** One-line supported-formats/size helper for display next to an uploader. */
@@ -62,6 +71,15 @@ export function buildImagePrompt(kind: ImageKind, title: string): string {
       `Modern, professional, slightly dark and low-contrast so white overlay text remains readable.`,
       `Clean composition, subtle technology/education motifs, soft depth of field, no text or logos in the image.`,
       `Aspect ratio ${s.aspectLabel}, ${s.width}x${s.height} pixels, high quality, photorealistic.`,
+    ].join(" ");
+  }
+
+  if (kind === "studentProject") {
+    return [
+      `A clean showcase image of a student project titled "${subject}" from a computer training institute.`,
+      `Could be a screenshot, mockup, or photo of the work; bright, modern, and uncluttered.`,
+      `No text overlays or watermarks, suitable as a gallery card.`,
+      `Aspect ratio ${s.aspectLabel}, ${s.width}x${s.height} pixels, high quality.`,
     ].join(" ");
   }
 

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  FolderKanban,
   GraduationCap,
   Mail,
   Megaphone,
@@ -20,6 +21,12 @@ const TILES = [
     label: "Testimonials",
     collection: "testimonials",
     icon: MessageSquareQuote,
+  },
+  {
+    href: "/admin/student-projects",
+    label: "Student projects",
+    collection: "studentProjects",
+    icon: FolderKanban,
   },
 ] as const;
 

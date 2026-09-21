@@ -1,152 +1,221 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { CheckCircle2, Loader2, Send } from "lucide-react";
+import { ChevronDown, Mail, MapPin, Phone } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
+import type { Course, SiteSettings } from "@/lib/data/types";
+import {
+  BRANCH_OPTIONS,
+  buildMailto,
+  validateEnquiry,
+  type EnquiryErrors,
+  type EnquiryInput,
+} from "@/lib/enquiry";
 
-type Status = "idle" | "submitting" | "success" | "error";
+const inputBase =
+  "w-full rounded-xl border bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink/35 focus:outline-none focus:ring-1";
+const ok = "border-ink/10 focus:border-accent focus:ring-accent";
+const bad = "border-red-500 focus:border-red-500 focus:ring-red-500";
 
-export default function QuerySection() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [errorMessage, setErrorMessage] = useState("");
+export default function QuerySection({
+  settings,
+  courses = [],
+}: {
+  settings?: SiteSettings;
+  courses?: Course[];
+}) {
+  const [errors, setErrors] = useState<EnquiryErrors>({});
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const to = settings?.email || "info@aicomputerinstitute.in";
+  const phone = settings?.phone || "+91 90000 00001";
+  const location = settings?.addressLines?.slice(1).join(", ") || "Govandi, Mumbai";
+
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus("submitting");
-    setErrorMessage("");
-
     const form = e.currentTarget;
     const data = new FormData(form);
+    const input: EnquiryInput = {
+      name: String(data.get("name") ?? ""),
+      phone: String(data.get("phone") ?? ""),
+      email: String(data.get("email") ?? ""),
+      course: String(data.get("course") ?? ""),
+      branch: String(data.get("branch") ?? ""),
+      message: String(data.get("message") ?? ""),
+    };
 
-    try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: data.get("name"),
-          contact: data.get("contact"),
-          courseInterested: data.get("courseInterested"),
-          message: data.get("message"),
-          company: data.get("company"),
-        }),
-      });
-
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || "Something went wrong.");
-      }
-
-      setStatus("success");
-      form.reset();
-    } catch (err) {
-      setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong.");
+    const found = validateEnquiry(input);
+    if (Object.keys(found).length > 0) {
+      setErrors(found);
+      return;
     }
+    setErrors({});
+    // Match the reference: open the visitor's email app with details prefilled.
+    window.location.href = buildMailto(to, input);
   }
 
   return (
-    <section id="query" className="section-y bg-white">
-      <div className="section max-w-3xl">
-        <Reveal className="text-center mb-12">
-          <span className="eyebrow uppercase">Get In Touch</span>
-          <h2 className="text-4xl md:text-5xl font-semibold text-ink mt-3 mb-4 tracking-tight">
-            Have a Question?
-          </h2>
-          <p className="text-ink/50 text-lg">
-            Send us your query and our team will get back to you shortly.
-          </p>
-        </Reveal>
+    <section id="query" className="section-y bg-surface">
+      <div className="section">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 items-start">
+          {/* Left: heading + contact info */}
+          <Reveal>
+            <span className="eyebrow uppercase">Enquiry</span>
+            <h2 className="text-4xl md:text-5xl font-semibold text-ink mt-3 mb-4 tracking-tight">
+              Have a question? Let&apos;s talk.
+            </h2>
+            <p className="text-ink/50 text-lg leading-relaxed max-w-md">
+              Send us your details and we&apos;ll reply with course info, fees and batch
+              timings.
+            </p>
 
-        <Reveal delay={0.1}>
-          {status === "success" ? (
-            <div className="bg-mist rounded-3xl p-10 text-center border border-ink/[0.05]">
-              <CheckCircle2 size={36} className="text-accent mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-ink mb-2 tracking-tight">
-                Message sent
-              </h3>
-              <p className="text-ink/50">
-                Thanks for reaching out — we&apos;ll get back to you soon.
-              </p>
-              <button
-                onClick={() => setStatus("idle")}
-                className="mt-6 text-sm font-medium text-accent hover:underline"
+            <div className="mt-8 space-y-4 text-sm">
+              <a
+                href={`mailto:${to}`}
+                className="flex items-center gap-3 text-ink/70 hover:text-ink transition-colors"
               >
-                Send another message
-              </button>
+                <Mail size={18} className="text-accent" />
+                {to}
+              </a>
+              <a
+                href={`tel:${phone.replace(/\s+/g, "")}`}
+                className="flex items-center gap-3 text-ink/70 hover:text-ink transition-colors"
+              >
+                <Phone size={18} className="text-accent" />
+                {phone}
+              </a>
+              <span className="flex items-center gap-3 text-ink/50">
+                <MapPin size={18} className="text-accent" />
+                {location}
+              </span>
             </div>
-          ) : (
+          </Reveal>
+
+          {/* Right: glass form card */}
+          <Reveal delay={0.1}>
             <form
               onSubmit={handleSubmit}
-              className="bg-mist rounded-3xl p-8 sm:p-10 border border-ink/[0.05] space-y-5"
+              noValidate
+              className="glass bg-mist rounded-3xl p-8 sm:p-10 border border-ink/[0.05] space-y-5"
             >
-              {/* Honeypot — hidden from real visitors, catches simple bots */}
-              <input
-                type="text"
-                name="company"
-                tabIndex={-1}
-                autoComplete="off"
-                className="hidden"
-                aria-hidden="true"
-              />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label className="block text-sm font-medium text-ink/70 mb-1.5">
+                    Full name
+                  </label>
+                  <input
+                    name="name"
+                    type="text"
+                    placeholder="Your name"
+                    aria-invalid={!!errors.name}
+                    className={`${inputBase} ${errors.name ? bad : ok}`}
+                  />
+                  {errors.name && (
+                    <p className="mt-1.5 text-xs text-red-500">{errors.name}</p>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-ink/70 mb-1.5">Phone</label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    inputMode="tel"
+                    placeholder="+91 "
+                    aria-invalid={!!errors.phone}
+                    className={`${inputBase} ${errors.phone ? bad : ok}`}
+                  />
+                  {errors.phone && (
+                    <p className="mt-1.5 text-xs text-red-500">{errors.phone}</p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-ink/70 mb-1.5">Email</label>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  aria-invalid={!!errors.email}
+                  className={`${inputBase} ${errors.email ? bad : ok}`}
+                />
+                {errors.email && (
+                  <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>
+                )}
+              </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-ink/70 mb-1.5">Name</label>
-                  <input
-                    name="name"
-                    required
-                    className="w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
-                  />
+                  <label className="block text-sm font-medium text-ink/70 mb-1.5">
+                    Course of interest
+                  </label>
+                  <div className="relative">
+                    <select
+                      name="course"
+                      defaultValue=""
+                      className={`${inputBase} ${ok} appearance-none pr-10`}
+                    >
+                      <option value="">Select a course</option>
+                      {courses.map((c) => (
+                        <option key={c.id} value={c.title}>
+                          {c.title}
+                        </option>
+                      ))}
+                      <option value="Not sure yet">Not sure yet</option>
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-ink/40"
+                    />
+                  </div>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-ink/70 mb-1.5">
-                    Phone or Email
+                    Preferred branch
                   </label>
-                  <input
-                    name="contact"
-                    required
-                    className="w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
-                  />
+                  <div className="relative">
+                    <select
+                      name="branch"
+                      defaultValue={BRANCH_OPTIONS[0]}
+                      className={`${inputBase} ${ok} appearance-none pr-10`}
+                    >
+                      {BRANCH_OPTIONS.map((b) => (
+                        <option key={b} value={b}>
+                          {b}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      size={16}
+                      className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-ink/40"
+                    />
+                  </div>
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-ink/70 mb-1.5">
-                  Course you&apos;re interested in (optional)
+                  Message (optional)
                 </label>
-                <input
-                  name="courseInterested"
-                  className="w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-ink/70 mb-1.5">Message</label>
                 <textarea
                   name="message"
-                  required
                   rows={4}
-                  className="w-full rounded-xl border border-ink/10 bg-white px-4 py-3 text-sm text-ink focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
+                  placeholder="Tell us what you'd like to know…"
+                  className={`${inputBase} ${ok}`}
                 />
               </div>
-
-              {status === "error" && <p className="text-sm text-red-600">{errorMessage}</p>}
 
               <button
                 type="submit"
-                disabled={status === "submitting"}
-                className="inline-flex items-center gap-2 bg-ink hover:bg-black text-white font-medium px-7 py-3.5 rounded-full transition-all duration-200 disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-dark text-white font-medium px-7 py-3.5 rounded-full transition-all duration-200"
               >
-                {status === "submitting" ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : (
-                  <Send size={16} />
-                )}
-                Send Message
+                Send enquiry
               </button>
+              <p className="text-xs text-ink/40 text-center">
+                Submitting opens your email app with the details filled in, ready to send.
+              </p>
             </form>
-          )}
-        </Reveal>
+          </Reveal>
+        </div>
       </div>
     </section>
   );

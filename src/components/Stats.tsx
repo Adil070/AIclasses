@@ -19,7 +19,7 @@ export default function Stats({ settings }: { settings: SiteSettings }) {
             const Icon = s.icon;
             return (
               <Reveal key={s.label} delay={i * 0.06}>
-                <div className="bg-white rounded-2xl p-6 text-center border border-ink/[0.05]">
+                <div className="glass bg-mist rounded-2xl p-6 text-center border border-ink/[0.05]">
                   <div className="inline-flex p-3 rounded-xl mb-3 bg-accent/10 text-accent">
                     <Icon size={22} />
                   </div>

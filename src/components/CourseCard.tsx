@@ -48,7 +48,7 @@ export function CourseCard({ course }: { course: Course }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="relative rounded-3xl border border-ink/[0.06] overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] h-full flex flex-col text-left w-full"
+        className="glass card-glow relative rounded-3xl border border-ink/[0.06] bg-mist overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.12)] h-full flex flex-col text-left w-full"
       >
         <div className="relative h-36 bg-mist flex items-center justify-center">
           {course.imageUrl ? (
@@ -63,7 +63,7 @@ export function CourseCard({ course }: { course: Course }) {
             <GraduationCap size={32} className="text-ink/20" />
           )}
           {course.badge && (
-            <span className="absolute top-3 right-3 bg-ink text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
+            <span className="absolute top-3 right-3 bg-accent text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
               {course.badge}
             </span>
           )}
@@ -109,13 +109,13 @@ export function CourseCard({ course }: { course: Course }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 12, scale: 0.98 }}
               transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="relative bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
+              className="relative bg-surface rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
             >
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close"
-                className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-sm"
+                className="absolute top-4 right-4 z-10 bg-surface/90 hover:bg-surface rounded-full p-2 shadow-sm"
               >
                 <X size={18} className="text-ink" />
               </button>
@@ -127,7 +127,7 @@ export function CourseCard({ course }: { course: Course }) {
                   <GraduationCap size={40} className="text-ink/20" />
                 )}
                 {course.badge && (
-                  <span className="absolute top-4 left-4 bg-ink text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
+                  <span className="absolute top-4 left-4 bg-accent text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
                     {course.badge}
                   </span>
                 )}
@@ -178,7 +178,7 @@ export function CourseCard({ course }: { course: Course }) {
                 <a
                   href="#query"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center gap-2 bg-ink hover:bg-black text-white font-medium px-6 py-3 rounded-full transition-all duration-200"
+                  className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-medium px-6 py-3 rounded-full transition-all duration-200"
                 >
                   Enquire About This Course <ArrowRight size={15} />
                 </a>

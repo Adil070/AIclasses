@@ -32,6 +32,18 @@ export async function POST(request: Request) {
     );
   }
 
+  // Contact must be a valid Indian mobile number OR a valid email.
+  const contactTrimmed = contact.trim();
+  const phoneDigits = contactTrimmed.replace(/[\s-]/g, "").replace(/^(\+91|0091|0)/, "");
+  const isPhone = /^[6-9]\d{9}$/.test(phoneDigits);
+  const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactTrimmed);
+  if (!isPhone && !isEmail) {
+    return NextResponse.json(
+      { error: "Enter a valid Indian mobile number or email address." },
+      { status: 400 }
+    );
+  }
+
   const gmailUser = process.env.GMAIL_USER;
   const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
   const receiver = process.env.CONTACT_RECEIVER_EMAIL || gmailUser;

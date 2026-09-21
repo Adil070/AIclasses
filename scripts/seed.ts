@@ -26,6 +26,11 @@ const settings = {
   heroHeadline: "Unlock Your Digital Future Today",
   heroSubheadline:
     "Professional computer education designed to give you real-world skills. Join hundreds of students who've launched their careers with us.",
+  heroBadges: [
+    "Admissions open · new batch this month",
+    "Certification programmes available",
+    "Free demo class · limited seats",
+  ],
   phone: "+91 98765 43210",
   email: "info@aicomputerinstitute.example",
   addressLines: ["AI Computer Institute", "Govandi, Mumbai", "Maharashtra — 400088"],
@@ -85,11 +90,18 @@ const testimonials = [
   { name: "Deepak Nair", course: "Hardware & Networking", rating: 5, review: "Excellent hardware course with real equipment to practice on. Got placed at a service center after completing. The fees were also very reasonable!", avatarInitials: "DN", order: 5 },
 ];
 
+const studentProjects = [
+  { title: "Sales Dashboard in Excel", student: "Aisha K.", imageUrl: "", order: 0, published: true },
+  { title: "Bakery Landing Page", student: "Rohan M.", imageUrl: "", order: 1, published: true },
+  { title: "Festival Poster Series", student: "Sana P.", imageUrl: "", order: 2, published: true },
+  { title: "Inventory Tracker", student: "Imran S.", imageUrl: "", order: 3, published: true },
+];
+
 async function seed() {
   await db.doc("settings/main").set(settings, { merge: true });
   console.log("✓ settings/main");
 
-  for (const [name, docs] of Object.entries({ banners, courses, features, testimonials })) {
+  for (const [name, docs] of Object.entries({ banners, courses, features, testimonials, studentProjects })) {
     const existing = await db.collection(name).limit(1).get();
     if (!existing.empty) {
       console.log(`- ${name}: already has data, skipping (delete the collection first to reseed)`);

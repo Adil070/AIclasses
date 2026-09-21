@@ -1,7 +1,10 @@
-import { ArrowRight, GraduationCap, MapPin } from "lucide-react";
+import { ArrowRight, GraduationCap, PlayCircle } from "lucide-react";
 import type { Course, SiteSettings } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { Counter } from "@/components/interactive/Counter";
+import HeroShapes from "@/components/interactive/HeroShapes";
+import BlobField from "@/components/interactive/BlobField";
+import LiveBadge from "@/components/interactive/LiveBadge";
 
 export default function Hero({
   settings,
@@ -10,31 +13,43 @@ export default function Hero({
   settings: SiteSettings;
   courses: Course[];
 }) {
-  const location = settings.addressLines[1] ?? settings.addressLines[0] ?? "";
+  const badges = (settings.heroBadges ?? []).map((b) => b.trim()).filter(Boolean);
   const preview = courses.slice(0, 6);
 
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-white"
+      className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-surface"
     >
+      {/* Light-mode subtle accent wash */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none dark:hidden"
         style={{
           background:
             "radial-gradient(80% 60% at 85% 15%, rgba(0,113,227,0.08), transparent)",
         }}
       />
 
-      <div className="relative section py-20">
+      {/* Dark-mode ambient blobs + floating 3D shapes */}
+      <BlobField />
+      <HeroShapes />
+      {/* Scrim keeps hero text readable over the 3D scene in dark mode */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none hidden dark:block"
+        style={{
+          background:
+            "linear-gradient(105deg, rgb(var(--c-surface)) 2%, rgba(12,13,18,0) 60%)",
+        }}
+      />
+
+      <div className="relative z-10 section py-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
-            <Reveal>
-              <div className="inline-flex items-center gap-2 bg-ink/[0.04] text-ink/60 text-[13px] font-medium px-4 py-1.5 rounded-full mb-7">
-                <MapPin size={13} className="text-accent" />
-                {location}
-              </div>
-            </Reveal>
+            {badges.length > 0 && (
+              <Reveal>
+                <LiveBadge lines={badges} />
+              </Reveal>
+            )}
 
             <Reveal delay={0.05}>
               <h1 className="text-5xl sm:text-6xl lg:text-[68px] font-semibold text-ink leading-[1.05] mb-6 tracking-tight">
@@ -52,15 +67,16 @@ export default function Hero({
               <div className="flex flex-wrap gap-4 mb-14">
                 <a
                   href="#courses"
-                  className="inline-flex items-center gap-2 bg-ink hover:bg-black text-white font-medium px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-medium px-7 py-3.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
                 >
                   Explore Courses <ArrowRight size={16} />
                 </a>
                 <a
                   href="#query"
-                  className="inline-flex items-center gap-2 border border-ink/15 text-ink hover:bg-ink/[0.04] font-medium px-7 py-3.5 rounded-full transition-all duration-200"
+                  className="glass inline-flex items-center gap-2 border border-ink/15 text-ink hover:bg-ink/[0.04] font-medium px-7 py-3.5 rounded-full transition-all duration-200"
                 >
-                  Get in Touch
+                  <PlayCircle size={16} className="text-accent" />
+                  Book a Demo
                 </a>
               </div>
             </Reveal>
@@ -85,7 +101,7 @@ export default function Hero({
           </div>
 
           <Reveal delay={0.15} className="hidden lg:block">
-            <div className="bg-mist rounded-[32px] p-8 border border-ink/[0.06]">
+            <div className="glass bg-mist rounded-[32px] p-8 border border-ink/[0.06]">
               <p className="text-ink/40 text-xs font-semibold uppercase tracking-widest mb-5">
                 What You&apos;ll Learn
               </p>
@@ -94,7 +110,7 @@ export default function Hero({
                   ? preview.map((c) => (
                       <div
                         key={c.id}
-                        className="bg-white hover:-translate-y-0.5 transition-transform duration-200 p-4 rounded-2xl border border-ink/[0.05]"
+                        className="bg-mist hover:-translate-y-0.5 transition-transform duration-200 p-4 rounded-2xl border border-ink/[0.05]"
                       >
                         <GraduationCap size={22} className="text-accent mb-3" />
                         <div className="text-ink text-sm font-medium leading-snug">
@@ -105,7 +121,7 @@ export default function Hero({
                   : Array.from({ length: 6 }).map((_, i) => (
                       <div
                         key={i}
-                        className="bg-white p-4 rounded-2xl border border-ink/[0.05] h-[86px]"
+                        className="bg-mist p-4 rounded-2xl border border-ink/[0.05] h-[86px]"
                       />
                     ))}
               </div>

@@ -1,4 +1,5 @@
-import { Facebook, Instagram, MapPin, Monitor, Phone, Youtube } from "lucide-react";
+import Link from "next/link";
+import { Facebook, Instagram, Lock, MapPin, Monitor, Phone, Youtube } from "lucide-react";
 import type { Course, SiteSettings } from "@/lib/data/types";
 
 const quickLinks = [
@@ -23,7 +24,7 @@ export default function Footer({
   ].filter((s) => s.href);
 
   return (
-    <footer className="bg-ink text-white pt-16 pb-8">
+    <footer className="bg-[#1d1d1f] dark:bg-[#0c0d12] text-white pt-16 pb-8">
       <div className="section">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-white/10">
           <div>
@@ -110,7 +111,16 @@ export default function Footer({
           <p>
             © {new Date().getFullYear()} {settings.instituteName}. All rights reserved.
           </p>
-          <p>{settings.tagline}</p>
+          <div className="flex items-center gap-5">
+            <p>{settings.tagline}</p>
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center gap-1.5 text-white/40 hover:text-white transition-colors"
+            >
+              <Lock size={13} />
+              Admin Login
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

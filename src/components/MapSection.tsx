@@ -18,7 +18,7 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           <Reveal className="space-y-4">
-            <div className="bg-white rounded-2xl p-6 border border-ink/[0.05]">
+            <div className="glass bg-surface rounded-2xl p-6 border border-ink/[0.05]">
               <div className="flex items-start gap-4">
                 <div className="bg-accent/10 text-accent p-3 rounded-xl flex-shrink-0">
                   <MapPin size={19} />
@@ -37,7 +37,7 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-ink/[0.05]">
+            <div className="glass bg-surface rounded-2xl p-6 border border-ink/[0.05]">
               <div className="flex items-start gap-4">
                 <div className="bg-accent/10 text-accent p-3 rounded-xl flex-shrink-0">
                   <Clock size={19} />
@@ -58,7 +58,7 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 border border-ink/[0.05]">
+            <div className="glass bg-surface rounded-2xl p-6 border border-ink/[0.05]">
               <div className="flex items-start gap-4">
                 <div className="bg-accent/10 text-accent p-3 rounded-xl flex-shrink-0">
                   <Phone size={19} />
@@ -80,7 +80,7 @@ export default function MapSection({ settings }: { settings: SiteSettings }) {
               href={settings.mapLinkUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 w-full bg-ink hover:bg-black text-white font-medium py-3.5 rounded-full transition-all duration-200"
+              className="flex items-center justify-center gap-2 w-full bg-accent hover:bg-accent-dark text-white font-medium py-3.5 rounded-full transition-all duration-200"
             >
               <MapPin size={16} /> Get Directions on Google Maps
             </a>

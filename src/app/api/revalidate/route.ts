@@ -2,7 +2,14 @@ import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { verifyAdminAuth } from "@/lib/firebase/admin";
 
-const VALID_TAGS = ["settings", "banners", "courses", "features", "testimonials"] as const;
+const VALID_TAGS = [
+  "settings",
+  "banners",
+  "courses",
+  "features",
+  "testimonials",
+  "studentProjects",
+] as const;
 type ValidTag = (typeof VALID_TAGS)[number];
 
 export async function POST(request: Request) {

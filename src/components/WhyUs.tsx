@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { Feature, SiteSettings } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
+import BlobField from "@/components/interactive/BlobField";
 
 const ICONS: Record<string, LucideIcon> = {
   Trophy,
@@ -31,8 +32,9 @@ export default function WhyUs({
   features: Feature[];
 }) {
   return (
-    <section id="why-us" className="section-y bg-mist">
-      <div className="section">
+    <section id="why-us" className="relative overflow-hidden section-y bg-mist">
+      <BlobField />
+      <div className="relative z-10 section">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <Reveal>
             <span className="eyebrow uppercase">Why Choose Us</span>
@@ -50,7 +52,7 @@ export default function WhyUs({
             </p>
             <a
               href="#courses"
-              className="inline-flex items-center gap-2 bg-ink hover:bg-black text-white font-medium px-7 py-3.5 rounded-full transition-all duration-200"
+              className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-medium px-7 py-3.5 rounded-full transition-all duration-200"
             >
               View All Courses →
             </a>
@@ -61,7 +63,7 @@ export default function WhyUs({
               const Icon = ICONS[f.icon] ?? Sparkles;
               return (
                 <Reveal key={f.id} delay={i * 0.06}>
-                  <div className="bg-white rounded-2xl p-5 border border-ink/[0.05] h-full">
+                  <div className="glass card-glow bg-mist rounded-2xl p-5 border border-ink/[0.05] h-full">
                     <div className="inline-flex p-3 rounded-xl mb-3 bg-accent/10 text-accent">
                       <Icon size={19} />
                     </div>

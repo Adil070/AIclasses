@@ -1,11 +1,13 @@
 import type { Course } from "@/lib/data/types";
 import { Reveal } from "@/components/motion/Reveal";
 import { CourseCard } from "@/components/CourseCard";
+import BlobField from "@/components/interactive/BlobField";
 
 export default function Courses({ courses }: { courses: Course[] }) {
   return (
-    <section id="courses" className="section-y bg-white">
-      <div className="section">
+    <section id="courses" className="relative overflow-hidden section-y bg-surface">
+      <BlobField />
+      <div className="relative z-10 section">
         <Reveal className="text-center mb-16">
           <span className="eyebrow uppercase">Our Specialities</span>
           <h2 className="text-4xl md:text-5xl font-semibold text-ink mt-3 mb-4 tracking-tight">

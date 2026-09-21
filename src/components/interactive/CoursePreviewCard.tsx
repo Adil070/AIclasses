@@ -19,7 +19,7 @@ export function CoursePreviewCard({
     <button
       type="button"
       onClick={onOpen}
-      className="group relative rounded-3xl border border-ink/[0.08] bg-white overflow-hidden h-full w-full flex flex-col text-left transition-shadow duration-300 hover:shadow-[0_20px_40px_-18px_rgba(0,0,0,0.18)]"
+      className="glass card-glow group relative rounded-3xl border border-ink/[0.08] bg-mist overflow-hidden h-full w-full flex flex-col text-left transition-shadow duration-300 hover:shadow-[0_20px_40px_-18px_rgba(0,0,0,0.18)]"
     >
       <div className="relative h-40 bg-mist flex items-center justify-center overflow-hidden">
         {course.imageUrl ? (
@@ -34,7 +34,7 @@ export function CoursePreviewCard({
           <GraduationCap size={34} className="text-ink/20" />
         )}
         {course.badge && (
-          <span className="absolute top-3 right-3 bg-ink text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
+          <span className="absolute top-3 right-3 bg-accent text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
             {course.badge}
           </span>
         )}

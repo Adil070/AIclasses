@@ -82,6 +82,15 @@ export default function SettingsAdminPage() {
               onChange={(e) => setSettings({ ...settings, heroSubheadline: e.target.value })}
             />
           </Field>
+          <Field label="Hero rotating badges (one line per row)">
+            <Textarea
+              rows={3}
+              value={settings.heroBadges.join("\n")}
+              onChange={(e) =>
+                setSettings({ ...settings, heroBadges: e.target.value.split("\n") })
+              }
+            />
+          </Field>
         </Card>
 
         <Card className="space-y-4">

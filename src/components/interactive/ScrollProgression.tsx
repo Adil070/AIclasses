@@ -34,7 +34,7 @@ export function ScrollProgression({ steps }: { steps: ProgressionStep[] }) {
 
   if (prefersReduced) {
     return (
-      <section className="section-y bg-white">
+      <section className="section-y bg-surface">
         <div className="section max-w-2xl">
           <h2 className="text-3xl font-semibold text-ink tracking-tight mb-8">
             Your learning journey
@@ -56,7 +56,7 @@ export function ScrollProgression({ steps }: { steps: ProgressionStep[] }) {
   }
 
   return (
-    <section ref={ref} className="relative bg-white" style={{ height: `${steps.length * 40}vh` }}>
+    <section ref={ref} className="relative bg-surface" style={{ height: `${steps.length * 25}vh` }}>
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
         <div className="section w-full">
           <h2 className="text-3xl md:text-4xl font-semibold text-ink tracking-tight mb-8 text-center">

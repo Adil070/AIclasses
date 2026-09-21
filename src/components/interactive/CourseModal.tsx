@@ -80,13 +80,13 @@ export function CourseModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 12, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative bg-white rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
+            className="relative bg-surface rounded-3xl max-w-lg w-full max-h-[85vh] overflow-y-auto"
           >
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white rounded-full p-2 shadow-sm"
+              className="absolute top-4 right-4 z-10 bg-surface/90 hover:bg-surface rounded-full p-2 shadow-sm"
             >
               <X size={18} className="text-ink" />
             </button>
@@ -98,7 +98,7 @@ export function CourseModal({
                 <GraduationCap size={40} className="text-ink/20" />
               )}
               {course.badge && (
-                <span className="absolute top-4 left-4 bg-ink text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
+                <span className="absolute top-4 left-4 bg-accent text-white text-[10px] font-semibold uppercase tracking-wide px-2.5 py-1 rounded-full">
                   {course.badge}
                 </span>
               )}
@@ -146,7 +146,7 @@ export function CourseModal({
               <a
                 href="#query"
                 onClick={onClose}
-                className="inline-flex items-center gap-2 bg-ink hover:bg-black text-white font-medium px-6 py-3 rounded-full transition-all duration-200"
+                className="inline-flex items-center gap-2 bg-accent hover:bg-accent-dark text-white font-medium px-6 py-3 rounded-full transition-all duration-200"
               >
                 Enquire About This Course <ArrowRight size={15} />
               </a>

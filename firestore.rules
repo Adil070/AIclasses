@@ -30,6 +30,10 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    match /studentProjects/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
 
     // Contact form submissions: only ever touched server-side via the Admin
     // SDK (which bypasses these rules), except the admin panel's inbox view

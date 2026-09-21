@@ -3,6 +3,8 @@ export interface SiteSettings {
   tagline: string;
   heroHeadline: string;
   heroSubheadline: string;
+  /** Rotating status-pill lines shown in the hero (managed from admin). */
+  heroBadges: string[];
   phone: string;
   email: string;
   addressLines: string[];
@@ -77,6 +79,15 @@ export interface Testimonial {
   review: string;
   avatarInitials: string;
   order: number;
+}
+
+export interface StudentProject {
+  id: string;
+  title: string;
+  student: string;
+  imageUrl: string;
+  order: number;
+  published: boolean;
 }
 
 export interface ContactSubmission {
