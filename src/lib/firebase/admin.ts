@@ -1,8 +1,8 @@
 import "server-only";
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import { getAuth } from "firebase-admin/auth";
-
+const { getAuth } = await import("firebase-admin/auth");
+ 
 function getAdminApp(): App {
   const existing = getApps();
   if (existing.length > 0) return existing[0];
@@ -25,8 +25,8 @@ export function getAdminDb() {
   return getFirestore(getAdminApp());
 }
 
-export function getAdminAuth() {
-  return getAuth(getAdminApp());
+export async function getAdminAuth() {
+   return getAuth(getAdminApp());
 }
 
 type AdminAuthResult = { ok: true } | { ok: false; status: number; error: string };
@@ -44,7 +44,7 @@ export async function verifyAdminAuth(request: Request): Promise<AdminAuthResult
   }
 
   try {
-    const decoded = await getAdminAuth().verifyIdToken(idToken);
+    const decoded = await (await getAdminAuth()).verifyIdToken(idToken);
     if (decoded.email !== adminEmail) return { ok: false, status: 403, error: "Forbidden." };
     return { ok: true };
   } catch {
