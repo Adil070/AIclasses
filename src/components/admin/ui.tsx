@@ -76,9 +76,9 @@ export function PageHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between mb-8 gap-4">
+    <div className="flex flex-col sm:flex-row items-start justify-between mb-6 sm:mb-8 gap-4">
       <div>
-        <h1 className="text-2xl font-semibold text-neutral-900 tracking-tight">{title}</h1>
+        <h1 className="text-xl sm:text-2xl font-semibold text-neutral-900 tracking-tight">{title}</h1>
         {description && <p className="text-sm text-neutral-500 mt-1">{description}</p>}
       </div>
       {action}
@@ -94,7 +94,7 @@ export function Card({
   className?: string;
 }) {
   return (
-    <div className={`bg-white rounded-2xl border border-neutral-200 p-6 ${className}`}>
+    <div className={`bg-white rounded-2xl border border-neutral-200 p-4 sm:p-6 ${className}`}>
       {children}
     </div>
   );
