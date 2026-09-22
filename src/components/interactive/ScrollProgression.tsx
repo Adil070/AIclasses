@@ -13,23 +13,13 @@ export interface ProgressionStep {
 /**
  * Scroll-driven learning journey. As the user scrolls through the tall section,
  * the active step advances. Under reduced motion, all steps render as a static
- * readable list.
+ * readable list. Renders nothing when there are no steps.
  */
 export function ScrollProgression({ steps }: { steps: ProgressionStep[] }) {
   const prefersReduced = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-  const [active, setActive] = useState(0);
-
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
-    setActive(stepForProgress(value, steps.length));
-  });
 
   if (steps.length === 0) {
-    return <section aria-hidden="true" />;
+    return null;
   }
 
   if (prefersReduced) {
@@ -54,6 +44,24 @@ export function ScrollProgression({ steps }: { steps: ProgressionStep[] }) {
       </section>
     );
   }
+
+  // The scroll-tracked variant is isolated so `useScroll`'s target ref is only
+  // ever created when it is actually attached to the DOM (avoids the
+  // "ref is defined but not hydrated" error on the empty/reduced paths).
+  return <ScrollTrackedProgression steps={steps} />;
+}
+
+function ScrollTrackedProgression({ steps }: { steps: ProgressionStep[] }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end end"],
+  });
+  const [active, setActive] = useState(0);
+
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    setActive(stepForProgress(value, steps.length));
+  });
 
   return (
     <section ref={ref} className="relative bg-surface" style={{ height: `${steps.length * 25}vh` }}>

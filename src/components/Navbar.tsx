@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, Monitor, X } from "lucide-react";
+import Link from "next/link";
+import { Lock, Menu, Monitor, X } from "lucide-react";
 import type { SiteSettings } from "@/lib/data/types";
 import ThemeToggle from "@/components/ThemeToggle";
 
@@ -43,6 +44,14 @@ export default function Navbar({ settings }: { settings: SiteSettings }) {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
+            <Link
+              href="/admin/login"
+              aria-label="Admin login"
+              className="hidden md:inline-flex items-center gap-1.5 text-ink/55 hover:text-ink font-medium px-3 py-2 rounded-full text-[13px] transition-colors duration-200"
+            >
+              <Lock size={14} />
+              Admin
+            </Link>
             <a
               href="#query"
               className="hidden md:inline-flex items-center bg-accent hover:bg-accent-dark text-white font-medium px-5 py-2 rounded-full text-[13px] transition-colors duration-200"
@@ -80,6 +89,13 @@ export default function Navbar({ settings }: { settings: SiteSettings }) {
           >
             Enquire Now
           </a>
+          <Link
+            href="/admin/login"
+            className="flex items-center justify-center gap-1.5 text-ink/60 hover:text-ink font-medium py-2.5 text-sm mt-1"
+            onClick={() => setMenuOpen(false)}
+          >
+            <Lock size={13} /> Admin Login
+          </Link>
         </div>
       )}
     </nav>

@@ -10,6 +10,7 @@ const VALID_TAGS = [
   "testimonials",
   "studentProjects",
   "branches",
+  "learningSteps",
 ] as const;
 type ValidTag = (typeof VALID_TAGS)[number];
 

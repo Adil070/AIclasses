@@ -11,7 +11,7 @@ import Footer from "@/components/Footer";
 import { RadialSelector } from "@/components/interactive/RadialSelector";
 import { ScrollProgression } from "@/components/interactive/ScrollProgression";
 import { ProjectsGallery } from "@/components/interactive/ProjectsGallery";
-import { PROGRESSION_STEPS } from "@/lib/data/interactive-content";
+import { getLearningSteps } from "@/lib/data/learning-steps";
 import { getSiteSettings } from "@/lib/data/settings";
 import { getBanners } from "@/lib/data/banners";
 import { getCourses } from "@/lib/data/courses";
@@ -25,16 +25,25 @@ import { getBranches } from "@/lib/data/branches";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [settings, banners, courses, features, testimonials, studentProjects, branches] =
-    await Promise.all([
-      getSiteSettings(),
-      getBanners(),
-      getCourses(),
-      getFeatures(),
-      getTestimonials(),
-      getStudentProjects(),
-      getBranches(),
-    ]);
+  const [
+    settings,
+    banners,
+    courses,
+    features,
+    testimonials,
+    studentProjects,
+    branches,
+    learningSteps,
+  ] = await Promise.all([
+    getSiteSettings(),
+    getBanners(),
+    getCourses(),
+    getFeatures(),
+    getTestimonials(),
+    getStudentProjects(),
+    getBranches(),
+    getLearningSteps(),
+  ]);
 
   return (
     <main>
@@ -45,7 +54,7 @@ export default async function Home() {
       <div className="py-10 bg-surface md:hidden">
         <RadialSelector courses={courses} />
       </div>
-      <ScrollProgression steps={PROGRESSION_STEPS} />
+      <ScrollProgression steps={learningSteps} />
       <ProjectsGallery projects={studentProjects} />
       <WhyUs settings={settings} features={features} />
       <Testimonials testimonials={testimonials} />

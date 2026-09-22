@@ -8,6 +8,7 @@ import {
   MapPin,
   Megaphone,
   MessageSquareQuote,
+  Route,
   Sparkles,
 } from "lucide-react";
 import { useFirestoreCollection } from "@/lib/admin/useFirestoreCollection";
@@ -30,6 +31,12 @@ const TILES = [
     icon: FolderKanban,
   },
   { href: "/admin/branches", label: "Branches", collection: "branches", icon: MapPin },
+  {
+    href: "/admin/learning-steps",
+    label: "Learning journey",
+    collection: "learningSteps",
+    icon: Route,
+  },
 ] as const;
 
 function CountTile({ href, label, collection, icon: Icon }: (typeof TILES)[number]) {

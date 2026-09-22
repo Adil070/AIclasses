@@ -103,6 +103,14 @@ export interface StudentProject {
   published: boolean;
 }
 
+export interface LearningStep {
+  id: string;
+  label: string;
+  description: string;
+  order: number;
+  published: boolean;
+}
+
 export interface ContactSubmission {
   id: string;
   name: string;

@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { Facebook, Instagram, Lock, MapPin, Monitor, Phone, Youtube } from "lucide-react";
+import { Facebook, Instagram, MapPin, Monitor, Phone, Youtube } from "lucide-react";
 import type { Course, SiteSettings } from "@/lib/data/types";
 
 const quickLinks = [
@@ -111,16 +110,7 @@ export default function Footer({
           <p>
             © {new Date().getFullYear()} {settings.instituteName}. All rights reserved.
           </p>
-          <div className="flex items-center gap-5">
-            <p>{settings.tagline}</p>
-            <Link
-              href="/admin/login"
-              className="inline-flex items-center gap-1.5 text-white/40 hover:text-white transition-colors"
-            >
-              <Lock size={13} />
-              Admin Login
-            </Link>
-          </div>
+          <p>{settings.tagline}</p>
         </div>
       </div>
     </footer>

@@ -110,13 +110,32 @@ const branches = [
     order: 0,
     published: true,
   },
+  {
+    name: "Kurla",
+    addressLines: ["AI Computer Institute", "Kurla West, Mumbai", "Maharashtra — 400070"],
+    phone: "+91 98765 43211",
+    timingsWeekday: "8:00 AM – 8:00 PM",
+    timingsSunday: "9:00 AM – 2:00 PM",
+    mapEmbedUrl: "https://maps.google.com/maps?q=Kurla+West+Mumbai&z=15&output=embed",
+    mapLinkUrl: "https://maps.app.goo.gl/H1TfHx7BSdhrHTYY8",
+    order: 1,
+    published: true,
+  },
+];
+
+const learningSteps = [
+  { label: "Computer Basics", description: "Start with confidence — hardware, files, and the internet.", order: 0, published: true },
+  { label: "MS Office", description: "Word, Excel, and PowerPoint for real office work.", order: 1, published: true },
+  { label: "Web & Design", description: "Build pages and design graphics that stand out.", order: 2, published: true },
+  { label: "Programming", description: "Write your first programs and think like a developer.", order: 3, published: true },
+  { label: "Advanced Skills", description: "Specialize and get job-ready with a portfolio.", order: 4, published: true },
 ];
 
 async function seed() {
   await db.doc("settings/main").set(settings, { merge: true });
   console.log("✓ settings/main");
 
-  for (const [name, docs] of Object.entries({ banners, courses, features, testimonials, studentProjects, branches })) {
+  for (const [name, docs] of Object.entries({ banners, courses, features, testimonials, studentProjects, branches, learningSteps })) {
     const existing = await db.collection(name).limit(1).get();
     if (!existing.empty) {
       console.log(`- ${name}: already has data, skipping (delete the collection first to reseed)`);
