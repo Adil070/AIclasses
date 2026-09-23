@@ -1,8 +1,7 @@
 import "server-only";
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-const { getAuth } = await import("firebase-admin/auth");
- 
+
 function getAdminApp(): App {
   const existing = getApps();
   if (existing.length > 0) return existing[0];
@@ -26,7 +25,8 @@ export function getAdminDb() {
 }
 
 export async function getAdminAuth() {
-   return getAuth(getAdminApp());
+  const { getAuth } = await import("firebase-admin/auth");
+  return getAuth(getAdminApp());
 }
 
 type AdminAuthResult = { ok: true } | { ok: false; status: number; error: string };
